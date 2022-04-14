@@ -1,0 +1,17 @@
+.flex-col {
+    width: 100%;
+    display: flex;
+}
+
+.genre-panel {
+    display: inline-block;
+    /* width: 46px; */
+    padding: 0 4px;
+    height: 20px;
+    line-height: 16px;
+    background-color: #FAFAFA;
+    box-sizing: border-box;
+    border-radius: 2px;
+    border: 1px solid #d9d9d9;
+
+}
