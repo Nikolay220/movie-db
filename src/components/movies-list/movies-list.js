@@ -48,7 +48,7 @@ export default class MoviesList extends Component {
                 <NumberRatingCircle rating={value.vote_average} />
                 <Text className="movie-release-date text text--font-size--12px text--color--827E7E">{releaseDate}</Text>
                 <Genres genres={value.genres} />
-                <Text>{value.overview.split(' ').slice(0, 20).join(' ') + '...'}</Text>
+                <Text>{value.overview.split(' ').slice(0, 10).join(' ') + '...'}</Text>
                 <StarsRatingPanel rating={value.vote_average} />
               </div>
             </div>
