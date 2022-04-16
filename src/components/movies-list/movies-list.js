@@ -42,7 +42,7 @@ export default class MoviesList extends Component {
               </Title>
               <Text className="movie-release-date text text--font-size--12px text--color--827E7E">{releaseDate}</Text>
               <Genres genres={movie.genres} />
-              <Text className="movie-description">{movie.overview.split(' ').slice(0, 10).join(' ') + '...'}</Text>
+              <Text className="movie-description">{movie.overview.split(' ').slice(0, 8).join(' ') + '...'}</Text>
             </div>
           </div>
           <NumberRatingCircle rating={movie.vote_average} />

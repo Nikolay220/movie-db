@@ -7,7 +7,7 @@ import './app.css'
 export default class App extends Component {
   constructor(props) {
     super(props)
-    if (window.matchMedia('(max-width: 944px)').matches && window.matchMedia('(max-width: 800px)').matches)
+    if (window.matchMedia('(max-width: 944px)').matches && window.matchMedia('(max-width: 830px)').matches)
       this.state = {
         curMedia: 'mobile',
       }
@@ -27,7 +27,7 @@ export default class App extends Component {
         this.setState({ curMedia: 'desktop' })
       }
     }
-    this.changeWindowSizeHandler_800px = (e) => {
+    this.changeWindowSizeHandler_830px = (e) => {
       if (e.matches) {
         this.setState({ curMedia: 'mobile' })
       } else {
@@ -35,7 +35,7 @@ export default class App extends Component {
       }
     }
     window.matchMedia('(max-width: 944px)').addEventListener('change', this.changeWindowSizeHandler_944px)
-    window.matchMedia('(max-width: 800px)').addEventListener('change', this.changeWindowSizeHandler_800px)
+    window.matchMedia('(max-width: 830px)').addEventListener('change', this.changeWindowSizeHandler_830px)
 
     this.generateDesktopApp = () => {
       return (
@@ -53,14 +53,6 @@ export default class App extends Component {
         </div>
       )
     }
-    // this.generateMobileApp = () => {
-    //   return (
-    //     <div className="app">
-    //       <Header />
-    //       <MoviesList matches_800px={this.state.matches_800px} />
-    //     </div>
-    //   )
-    // }
   }
 
   render() {
