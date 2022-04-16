@@ -21,18 +21,19 @@ export default function StarsRatingPanel({ rating }) {
       // else if (counter === fullAndDecimalDigits[0] + 1)
       //   starsArr.push(
       //     <span style={{ position: 'relative' }}>
-      //       <StarFilled style={{ fontSize: '20px', color: 'transparent', position: 'relative', zIndex: '2' }} />
-      //       <span
+      //       <StarFilled style={{ fontSize: '17px', color: '#f0f0f0', zIndex: '2', marginRight: '6px' }} />
+      //       <StarFilled
       //         style={{
-      //           content: '',
-      //           width: '20px',
-      //           height: '20px',
-      //           backgroundColor: '#f0f0f0',
+      //           fontSize: '17px',
+      //           height: '17px',
+      //           width: '10px',
+      //           color: '#fadb14',
       //           position: 'absolute',
-      //           zIndex: '1',
+      //           // zIndex: '1',
       //           left: '0',
+      //           top: '0',
       //         }}
-      //       ></span>
+      //       ></StarFilled>
       //     </span>
       //   )
       else

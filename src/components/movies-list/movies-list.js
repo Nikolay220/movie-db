@@ -27,31 +27,94 @@ export default class MoviesList extends Component {
     //     return <GenreItem key={genre.id} genre={genre.name} />
     //   })
     // }
-
-    this.generateRows = () => {
-      return this.state.movies.map((value) => {
-        const releaseDate = format(new Date(...value.release_date.split('-')), 'PPP')
-        return (
-          <Col key={value.id} span={12}>
-            <div className="movie-cell">
-              {/* <span>
-                <img src={_base_posters_url + value.poster_path} width={183} />
-              </span> */}
-              <div
-                className="poster-container"
-                style={{ background: `url(${_base_posters_url + value.poster_path}) no-repeat 50% 0%` }}
-              ></div>
-              <div style={{ position: 'relative', marginLeft: '20px', flexBasis: '248px' }}>
-                <Title className="movie-title text text--font-size--20px text--color--000" level={5}>
-                  {value.title}
-                </Title>
-                <NumberRatingCircle rating={value.vote_average} />
-                <Text className="movie-release-date text text--font-size--12px text--color--827E7E">{releaseDate}</Text>
-                <Genres genres={value.genres} />
-                <Text>{value.overview.split(' ').slice(0, 10).join(' ') + '...'}</Text>
-                <StarsRatingPanel rating={value.vote_average} />
-              </div>
+    this.generateDesktopMovieCell = (movie) => {
+      const releaseDate = format(new Date(...movie.release_date.split('-')), 'PPP')
+      return (
+        <div className="movie-cell">
+          <div className="movie-cell-container">
+            <div
+              className="poster-container"
+              style={{ background: `url(${_base_posters_url + movie.poster_path}) no-repeat 50% 0%` }}
+            ></div>
+            <div style={{ position: 'relative', marginLeft: '20px', flexBasis: '248px' }}>
+              <Title className="movie-title text text--font-size--20px text--color--000" level={4}>
+                {movie.title}
+              </Title>
+              <Text className="movie-release-date text text--font-size--12px text--color--827E7E">{releaseDate}</Text>
+              <Genres genres={movie.genres} />
+              <Text className="movie-description">{movie.overview.split(' ').slice(0, 10).join(' ') + '...'}</Text>
             </div>
+          </div>
+          <NumberRatingCircle rating={movie.vote_average} />
+          <StarsRatingPanel rating={movie.vote_average} />
+        </div>
+      )
+    }
+    this.generateTabletMovieCell = (movie) => {
+      const releaseDate = format(new Date(...movie.release_date.split('-')), 'PPP')
+      return (
+        <div className="movie-cell movie-cell--tablet">
+          <div className="movie-cell-container">
+            <div
+              className="poster-container poster-container--tablet"
+              style={{ background: `url(${_base_posters_url + movie.poster_path}) no-repeat 50% 0%` }}
+            ></div>
+            <div style={{ position: 'relative', marginLeft: '13px', flexBasis: '248px' }}>
+              <Title className="movie-title movie-title--tablet text text--font-size--20px text--color--000" level={4}>
+                {movie.title}
+              </Title>
+              <Text className="movie-release-date text text--font-size--12px text--color--827E7E">{releaseDate}</Text>
+              <Genres genres={movie.genres} />
+            </div>
+          </div>
+          <NumberRatingCircle rating={movie.vote_average} />
+          <Text className="movie-description movie-description--tablet">
+            {movie.overview.split(' ').slice(0, 10).join(' ') + '...'}
+          </Text>
+          <StarsRatingPanel rating={movie.vote_average} />
+        </div>
+      )
+    }
+
+    this.generateMobileMovieCell = (movie) => {
+      const releaseDate = format(new Date(...movie.release_date.split('-')), 'PPP')
+      return (
+        <div className="movie-cell movie-cell--mobile">
+          <div className="movie-cell-container">
+            <div
+              className="poster-container poster-container--mobile"
+              style={{ background: `url(${_base_posters_url + movie.poster_path}) no-repeat 50% 0%` }}
+            ></div>
+            <div style={{ position: 'relative', marginLeft: '13px', flexBasis: '248px' }}>
+              <Title className="movie-title movie-title--tablet text text--font-size--20px text--color--000" level={4}>
+                {movie.title}
+              </Title>
+              <Text className="movie-release-date text text--font-size--12px text--color--827E7E">{releaseDate}</Text>
+              <Genres genres={movie.genres} />
+            </div>
+          </div>
+          <NumberRatingCircle rating={movie.vote_average} />
+          <Text className="movie-description movie-description--tablet">
+            {movie.overview.split(' ').slice(0, 15).join(' ') + '...'}
+          </Text>
+          <StarsRatingPanel rating={movie.vote_average} />
+        </div>
+      )
+    }
+
+    this.generateRows = (displayWidth) => {
+      return this.state.movies.map((value) => {
+        let columnsWidth = 12
+        if (displayWidth === 'mobile') columnsWidth = 24
+
+        // const releaseDate = format(new Date(...value.release_date.split('-')), 'PPP')
+        return (
+          <Col key={value.id} span={columnsWidth}>
+            {displayWidth === 'desktop'
+              ? this.generateDesktopMovieCell(value)
+              : displayWidth === 'tablet'
+              ? this.generateTabletMovieCell(value)
+              : this.generateMobileMovieCell(value)}
           </Col>
         )
       })
@@ -59,11 +122,22 @@ export default class MoviesList extends Component {
   }
 
   render() {
-    const movies = this.generateRows()
-
+    const movies = this.generateRows(this.props.curMedia)
+    let rowGutters = [0, 0]
+    let moviesListClasses = ''
+    if (this.props.curMedia === 'desktop') {
+      rowGutters = [36, 36]
+      moviesListClasses = 'movies-list'
+    } else if (this.props.curMedia === 'tablet') {
+      rowGutters = [20, 20]
+      moviesListClasses = 'movies-list movies-list--tablet'
+    } else if (this.props.curMedia === 'mobile') {
+      rowGutters = [0, 20]
+      moviesListClasses = 'movies-list movies-list--mobile'
+    }
     return (
-      <div className="movies-list">
-        <Row gutter={[36, 36]}>{movies}</Row>
+      <div className={moviesListClasses}>
+        <Row gutter={rowGutters}>{movies}</Row>
       </div>
     )
   }
