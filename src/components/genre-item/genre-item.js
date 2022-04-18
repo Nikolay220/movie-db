@@ -1,7 +1,8 @@
 import React from 'react'
-import './genre-item.css'
+
+import styles from './genre-item.scss'
 function GenreItem({ genre }) {
-  return <span className="genre-panel">{genre}</span>
+  return <span className={styles['genre-panel']}>{genre}</span>
 }
 
 export default GenreItem

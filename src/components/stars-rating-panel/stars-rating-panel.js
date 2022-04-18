@@ -1,8 +1,13 @@
 import React from 'react'
 import { StarFilled } from '@ant-design/icons'
-import './stars-rating-panel.css'
+
+import AppController from '../../services/app-controller'
+
+import styles from './stars-rating-panel.module.scss'
 
 export default function StarsRatingPanel({ rating }) {
+  const appController = new AppController(styles)
+  const f = appController.classesToCssModulesFormat.bind(appController)
   const generateStars = () => {
     let fullAndDecimalDigits = rating
       .toString()
@@ -41,5 +46,5 @@ export default function StarsRatingPanel({ rating }) {
     }
     return starsArr
   }
-  return <div className="stars-rating-panel">{generateStars()}</div>
+  return <div className={f('stars-rating-panel')}>{generateStars()}</div>
 }

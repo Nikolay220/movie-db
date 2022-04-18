@@ -1,6 +1,14 @@
+@use 'src/index.module.scss';
+
 .movies-list {
     padding-top: 34px;
     padding-bottom: 36px;
+    &--tablet {
+        padding-top: 10px;
+    }
+    &--mobile {
+        padding-top: 10px;
+    }
 }
 
 .movie-cell {
@@ -10,6 +18,14 @@
     min-width: 388px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15),
         0px -4px 12px rgba(0, 0, 0, 0.15);
+    &--tablet{
+        height: 245px;
+    }
+    &--mobile {
+        height: 245px;
+        min-width: 388px;
+        margin: auto;
+    }
 }
 
 .movie-cell-container {
@@ -25,6 +41,10 @@
     height: auto;
     /* max-height: 72px;
     overflow-y: scroll; */
+    &--tablet{
+        margin-top: 4px;
+        min-width: 217px;        
+    }
 }
 
 .movie-release-date {
@@ -39,6 +59,21 @@
     background-size: 100% auto !important;
     /* min-width: 132px; */
     padding-bottom: 61%;
+    &--tablet {
+        flex-basis: 99px;
+        min-width: 60px;
+        padding-bottom: 0;
+        margin-top: 6px;
+        margin-left: 10px;
+        height: 149px;
+    }
+    &--mobile {
+        margin-top: 6px;
+        margin-left: 10px;
+        flex-basis: 15.5%;
+        background-size: 100% auto !important;
+        padding-bottom: 23%;
+    }
 }
 
 
@@ -46,50 +81,7 @@
     display: inline-block;
     /* max-height: 63px;
     overflow-y: scroll; */
-}
-
-/* tablet */
-.movie-cell--tablet {
-    height: 245px;
-}
-
-.movie-title--tablet {
-    margin-top: 4px;
-    min-width: 217px;
-}
-
-.poster-container--tablet {
-    flex-basis: 99px;
-    min-width: 60px;
-    padding-bottom: 0;
-    margin-top: 6px;
-    margin-left: 10px;
-    height: 149px;
-}
-
-.movie-description--tablet {
-    margin: 10px 10px 0;
-}
-
-.movies-list--tablet {
-    padding-top: 10px;
-}
-
-/* Mobile devices */
-.movie-cell--mobile {
-    height: 245px;
-    min-width: 388px;
-    margin: auto;
-}
-
-.movies-list--mobile {
-    padding-top: 10px;
-}
-
-.poster-container--mobile {
-    margin-top: 6px;
-    margin-left: 10px;
-    flex-basis: 15.5%;
-    background-size: 100% auto !important;
-    padding-bottom: 23%;
+    &--tablet {
+        margin: 10px 10px 0;
+    }
 }

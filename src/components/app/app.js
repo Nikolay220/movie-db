@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 
 import Header from '../header'
 import MoviesList from '../movies-list'
-import './app.css'
+
+import styles from './app.module.scss'
 
 export default class App extends Component {
   constructor(props) {
@@ -39,7 +40,7 @@ export default class App extends Component {
 
     this.generateDesktopApp = () => {
       return (
-        <div className="app">
+        <div className={styles.app}>
           <Header />
           <MoviesList curMedia={this.state.curMedia} />
         </div>
@@ -47,7 +48,7 @@ export default class App extends Component {
     }
     this.generateTabletApp = () => {
       return (
-        <div className="app app--tablet">
+        <div className={`${styles.app} ${styles['app--tablet']}`}>
           <Header />
           <MoviesList curMedia={this.state.curMedia} />
         </div>

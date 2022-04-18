@@ -8,7 +8,9 @@ import StarsRatingPanel from '../stars-rating-panel'
 import Genres from '../genres'
 const { Title, Text } = Typography
 import TmdbApiService from '../../services/tmdb-api-service'
-import './movies-list.css'
+import AppController from '../../services/app-controller'
+
+import styles from './movies-list.module.scss'
 
 const moviesNumOnPage = 6
 export default class MoviesList extends Component {
@@ -54,22 +56,26 @@ export default class MoviesList extends Component {
     //     return <GenreItem key={genre.id} genre={genre.name} />
     //   })
     // }
+    const appController = new AppController(styles)
+    const f = appController.classesToCssModulesFormat.bind(appController)
     this.generateDesktopMovieCell = (movie) => {
       const releaseDate = format(new Date(...movie.release_date.split('-')), 'PPP')
       return (
-        <div className="movie-cell">
-          <div className="movie-cell-container">
+        <div className={f('movie-cell')}>
+          <div className={f('movie-cell-container')}>
             <div
-              className="poster-container"
+              className={f('poster-container')}
               style={{ background: `url(${_base_posters_url + movie.poster_path}) no-repeat 50% 0%` }}
             ></div>
             <div style={{ position: 'relative', marginLeft: '20px', flexBasis: '248px' }}>
-              <Title className="movie-title text text--font-size--20px text--color--000" level={4}>
+              <Title className={f('movie-title text text--font-size--20px text--color--000')} level={4}>
                 {movie.title}
               </Title>
-              <Text className="movie-release-date text text--font-size--12px text--color--827E7E">{releaseDate}</Text>
+              <Text className={f('movie-release-date text text--font-size--12px text--color--827E7E')}>
+                {releaseDate}
+              </Text>
               <Genres genres={movie.genres} />
-              <Text className="movie-description">{movie.overview.split(' ').slice(0, 8).join(' ') + '...'}</Text>
+              <Text className={f('movie-description')}>{movie.overview.split(' ').slice(0, 8).join(' ') + '...'}</Text>
             </div>
           </div>
           <NumberRatingCircle rating={movie.vote_average} />
@@ -80,22 +86,27 @@ export default class MoviesList extends Component {
     this.generateTabletMovieCell = (movie) => {
       const releaseDate = format(new Date(...movie.release_date.split('-')), 'PPP')
       return (
-        <div className="movie-cell movie-cell--tablet">
-          <div className="movie-cell-container">
+        <div className={f('movie-cell movie-cell--tablet')}>
+          <div className={f('movie-cell-container')}>
             <div
-              className="poster-container poster-container--tablet"
+              className={f('poster-container poster-container--tablet')}
               style={{ background: `url(${_base_posters_url + movie.poster_path}) no-repeat 50% 0%` }}
             ></div>
             <div style={{ position: 'relative', marginLeft: '13px', flexBasis: '248px' }}>
-              <Title className="movie-title movie-title--tablet text text--font-size--20px text--color--000" level={4}>
+              <Title
+                className={f('movie-title movie-title--tablet text text--font-size--20px text--color--000')}
+                level={4}
+              >
                 {movie.title}
               </Title>
-              <Text className="movie-release-date text text--font-size--12px text--color--827E7E">{releaseDate}</Text>
+              <Text className={f('movie-release-date text text--font-size--12px text--color--827E7E')}>
+                {releaseDate}
+              </Text>
               <Genres genres={movie.genres} />
             </div>
           </div>
           <NumberRatingCircle rating={movie.vote_average} />
-          <Text className="movie-description movie-description--tablet">
+          <Text className={f('movie-description movie-description--tablet')}>
             {movie.overview.split(' ').slice(0, 10).join(' ') + '...'}
           </Text>
           <StarsRatingPanel rating={movie.vote_average} />
@@ -106,22 +117,27 @@ export default class MoviesList extends Component {
     this.generateMobileMovieCell = (movie) => {
       const releaseDate = format(new Date(...movie.release_date.split('-')), 'PPP')
       return (
-        <div className="movie-cell movie-cell--mobile">
-          <div className="movie-cell-container">
+        <div className={f('movie-cell movie-cell--mobile')}>
+          <div className={f('movie-cell-container')}>
             <div
-              className="poster-container poster-container--mobile"
+              className={f('poster-container poster-container--mobile')}
               style={{ background: `url(${_base_posters_url + movie.poster_path}) no-repeat 50% 0%` }}
             ></div>
             <div style={{ position: 'relative', marginLeft: '13px', flexBasis: '248px' }}>
-              <Title className="movie-title movie-title--tablet text text--font-size--20px text--color--000" level={4}>
+              <Title
+                className={f('movie-title movie-title--tablet text text--font-size--20px text--color--000')}
+                level={4}
+              >
                 {movie.title}
               </Title>
-              <Text className="movie-release-date text text--font-size--12px text--color--827E7E">{releaseDate}</Text>
+              <Text className={f('movie-release-date text text--font-size--12px text--color--827E7E')}>
+                {releaseDate}
+              </Text>
               <Genres genres={movie.genres} />
             </div>
           </div>
           <NumberRatingCircle rating={movie.vote_average} />
-          <Text className="movie-description movie-description--tablet">
+          <Text className={f('movie-description movie-description--tablet')}>
             {movie.overview.split(' ').slice(0, 15).join(' ') + '...'}
           </Text>
           <StarsRatingPanel rating={movie.vote_average} />
@@ -149,6 +165,7 @@ export default class MoviesList extends Component {
   }
 
   render() {
+    // console.log(styles)
     if (this.state.alert) return <React.Fragment>{this.state.alert}</React.Fragment>
     if (this.state.loading) return <CustomSpinner />
 

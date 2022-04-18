@@ -1,7 +1,8 @@
 import React from 'react'
-import './genres.css'
 
 import GenreItem from '../genre-item'
+
+import styles from './genres.scss'
 
 export default function Genres({ genres }) {
   const generateGenres = (genresArr) => {
@@ -9,5 +10,5 @@ export default function Genres({ genres }) {
       return <GenreItem key={genre.id} genre={genre.name} />
     })
   }
-  return <div className="genres">{generateGenres(genres)}</div>
+  return <div className={styles['genres']}>{generateGenres(genres)}</div>
 }
