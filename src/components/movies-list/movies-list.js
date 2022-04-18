@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { Row, Col, Typography } from 'antd'
+import { Row, Col, Typography, Alert } from 'antd'
 import { format } from 'date-fns'
 
+import CustomSpinner from '../custom-spinner'
 import NumberRatingCircle from '../number-rating-circle'
 import StarsRatingPanel from '../stars-rating-panel'
 import Genres from '../genres'
@@ -15,12 +16,38 @@ export default class MoviesList extends Component {
     super(props)
     this.state = {
       movies: [],
+      alert: null,
+      loading: true,
     }
     const tmdbApiService = new TmdbApiService()
     const _base_posters_url = tmdbApiService.getBasePostersUrl()
-    tmdbApiService.getMoviesByNameWithGenres('return').then((movies) => {
-      this.setState({ movies: movies.slice(0, moviesNumOnPage) })
-    })
+    tmdbApiService
+      .getMoviesByNameWithGenres('return')
+      .then((movies) => {
+        this.setState({ movies: movies.slice(0, moviesNumOnPage), alert: null, loading: false })
+      })
+      .catch((error) => {
+        this.setState({
+          alert: (
+            <Alert
+              message="Error"
+              description={
+                'Recommendations: ' +
+                error.checksRecommendations +
+                '. Mess:' +
+                error.message +
+                '.  Error name: ' +
+                error.name +
+                '.  Error stack: ' +
+                error.stack
+              }
+              type="error"
+              showIcon
+            />
+          ),
+          loading: false,
+        })
+      })
 
     // this.generateGenres = (genresArr) => {
     //   return genresArr.map((genre) => {
@@ -122,6 +149,9 @@ export default class MoviesList extends Component {
   }
 
   render() {
+    if (this.state.alert) return <React.Fragment>{this.state.alert}</React.Fragment>
+    if (this.state.loading) return <CustomSpinner />
+
     const movies = this.generateRows(this.props.curMedia)
     let rowGutters = [0, 0]
     let moviesListClasses = ''
@@ -136,9 +166,11 @@ export default class MoviesList extends Component {
       moviesListClasses = 'movies-list movies-list--mobile'
     }
     return (
-      <div className={moviesListClasses}>
-        <Row gutter={rowGutters}>{movies}</Row>
-      </div>
+      <React.Fragment>
+        <div className={moviesListClasses}>
+          <Row gutter={rowGutters}>{movies}</Row>
+        </div>
+      </React.Fragment>
     )
   }
 }

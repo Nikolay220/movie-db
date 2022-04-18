@@ -1,3 +1,6 @@
+import GetAllGenresError from '../../Errors/get-all-genres-error'
+import GetMoviesByNameError from '../../Errors/get-movies-by-name-error'
+
 export default class TmdbApiService {
   constructor() {
     this._api_key = '3eb71cd42f58980962014e01b5dfda44'
@@ -14,8 +17,7 @@ export default class TmdbApiService {
       const content = await response.json()
       return content.results
     } catch (error) {
-      console.error('Something wrong with fetch function, error:' + error.message)
-      throw error
+      throw new GetMoviesByNameError(error.message)
     }
   }
 
@@ -26,15 +28,16 @@ export default class TmdbApiService {
       )
       const genres = await response.json()
       return genres.genres
-    } catch (err) {
-      console.error('Something wrong with fetch function, error:' + err.message)
-      throw err
+    } catch (error) {
+      throw new GetAllGenresError(error.message)
     }
   }
 
   async getMoviesByNameWithGenres(name) {
-    let movies = await this.getMoviesByName(name)
-    let genres = await this.getAllGenres()
+    let movies
+    let genres
+    movies = await this.getMoviesByName(name)
+    genres = await this.getAllGenres()
     movies.forEach((movie) => {
       movie.genres = []
       movie.genre_ids.forEach((id) => {
