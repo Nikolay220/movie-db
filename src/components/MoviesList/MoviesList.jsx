@@ -32,11 +32,12 @@ export default class MoviesList extends Component {
     const appController = new AppController(styles)
     const f = appController.classesToCssModulesFormat.bind(appController)
 
-    this.updateComponent = () => {
+    this.updateComponent = (pageNumber, curQuery) => {
       this.setState({ loading: true })
       this.tmdbApiService
-        .getMoviesByNameWithGenres(this.props.curQuery)
+        .getMoviesByNameWithGenres(pageNumber, curQuery)
         .then((movies) => {
+          this.props.onMoviesNumberChange(this.tmdbApiService.getCurNumOfMovies())
           this.setState({ movies: movies.slice(0, moviesNumOnPage), alert: null, loading: false })
         })
         .catch((error) => {
@@ -203,11 +204,14 @@ export default class MoviesList extends Component {
   }
 
   componentDidMount() {
-    this.updateComponent()
+    this.updateComponent(this.props.curPage, this.props.curQuery)
   }
   componentDidUpdate(prevProps) {
     if (prevProps.curQuery !== this.props.curQuery) {
-      this.updateComponent()
+      this.updateComponent(1, this.props.curQuery)
+    }
+    if (prevProps.curPage !== this.props.curPage) {
+      this.updateComponent(this.props.curPage, this.props.curQuery)
     }
   }
 

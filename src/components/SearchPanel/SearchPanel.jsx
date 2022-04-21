@@ -10,10 +10,20 @@ export default class SearchPanel extends Component {
     super(props)
     this.state = {
       queryStr: 'return',
+      totalMovies: 0,
+      curPage: 1,
+    }
+
+    this.onCurPageChange = (curPage) => {
+      this.setState({ curPage })
     }
 
     this.onSearchInputChange = (evt) => {
-      this.setState({ queryStr: evt.target.value })
+      this.setState({ queryStr: evt.target.value, curPage: 1 })
+    }
+
+    this.onMoviesNumberChange = (numOfMovies) => {
+      this.setState({ totalMovies: numOfMovies })
     }
   }
 
@@ -21,9 +31,22 @@ export default class SearchPanel extends Component {
     let windowSize = this.props.windowSize
     return (
       <Fragment>
-        <SearchInput onChange={_.debounce(this.onSearchInputChange, 2000)} windowSize={windowSize} />
-        <MoviesList windowSize={windowSize} curQuery={this.state.queryStr} />
-        <Paginator />
+        <SearchInput
+          curQuery={this.state.queryStr}
+          onChange={_.debounce(this.onSearchInputChange, 2000)}
+          windowSize={windowSize}
+        />
+        <MoviesList
+          windowSize={windowSize}
+          curQuery={this.state.queryStr}
+          onMoviesNumberChange={this.onMoviesNumberChange}
+          curPage={this.state.curPage}
+        />
+        <Paginator
+          totalMovies={this.state.totalMovies}
+          curPage={this.state.curPage}
+          onCurPageChange={this.onCurPageChange}
+        />
       </Fragment>
     )
   }

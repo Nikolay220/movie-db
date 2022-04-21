@@ -5,17 +5,23 @@ export default class TmdbApiService {
   constructor() {
     this._api_key = '3eb71cd42f58980962014e01b5dfda44'
     this._base_posters_url = 'https://image.tmdb.org/t/p/w185'
+    this._curNumOfMovies = 0
+  }
+  getCurNumOfMovies() {
+    return this._curNumOfMovies
   }
   getBasePostersUrl() {
     return this._base_posters_url
   }
-  async getMoviesByName(name) {
+  async getMoviesByName(pageNumber, name) {
     try {
       if (name) {
         const response = await fetch(
-          `https://api.themoviedb.org/3/search/movie?api_key=${this._api_key}&query=${name}&page=1&language=en-US`
+          `https://api.themoviedb.org/3/search/movie?api_key=${this._api_key}&query=${name}&page=${pageNumber}&language=en-US`
         )
         const content = await response.json()
+
+        this._curNumOfMovies = content.total_results
         return content.results
       }
       return []
@@ -36,10 +42,10 @@ export default class TmdbApiService {
     }
   }
 
-  async getMoviesByNameWithGenres(name) {
+  async getMoviesByNameWithGenres(pageNumber, name) {
     let movies
     let genres
-    movies = await this.getMoviesByName(name)
+    movies = await this.getMoviesByName(pageNumber, name)
     genres = await this.getAllGenres()
     movies.forEach((movie) => {
       movie.genres = []
