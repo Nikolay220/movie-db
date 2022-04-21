@@ -1,0 +1,17 @@
+@use 'src/index.module.scss';
+.number-rating-circle {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #e9d100;
+  border-radius: 50%;
+  background-color: transparent;
+  right: 7px;
+  top: 8px;
+  &__rating {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}

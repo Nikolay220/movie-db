@@ -1,0 +1,18 @@
+.search-panel{
+  width: 100%;
+  margin-bottom: 32px;
+  margin-top: 19px;
+  &__input{
+    max-width: 976px;
+    margin: auto !important;
+    display: block !important;
+    &--mobile{
+      max-width: 451px;
+      min-width: 388px !important;
+    }
+  }
+  &--mobile{
+    margin-bottom: 10px;
+    margin-top: 17px;
+  }
+}

@@ -1,2 +1,2 @@
-import Genres from './genres'
+import Genres from './Genres'
 export default Genres
