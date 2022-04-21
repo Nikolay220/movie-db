@@ -3,6 +3,7 @@ import _ from 'lodash'
 
 import SearchInput from '../SearchInput'
 import MoviesList from '../MoviesList'
+import Paginator from '../Paginator'
 
 export default class SearchPanel extends Component {
   constructor(props) {
@@ -22,6 +23,7 @@ export default class SearchPanel extends Component {
       <Fragment>
         <SearchInput onChange={_.debounce(this.onSearchInputChange, 2000)} windowSize={windowSize} />
         <MoviesList windowSize={windowSize} curQuery={this.state.queryStr} />
+        <Paginator />
       </Fragment>
     )
   }

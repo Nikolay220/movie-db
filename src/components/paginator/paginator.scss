@@ -1,0 +1,18 @@
+.ant-pagination-item-active{
+  background: #1890FF !important;
+  line-height: 21px !important;
+  a{
+    color: #ffffff !important;
+    background-color: #1890FF !important;
+    &:focus-visible{
+      a{
+        color: #fff !important;
+      }
+    }
+    &:hover{
+      a{
+        color: #fff !important;
+      }
+    }
+  }
+}
