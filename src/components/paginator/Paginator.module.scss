@@ -1,5 +1,11 @@
 .paginator-container {
+  margin-top: 36px;
+  padding-bottom: 17px;
   text-align: center;
+  @media screen and (max-width:830px){
+    margin-top: 20px;
+    padding-bottom: 20px;
+  }
 }
 .paginator {
   display: inline-block;
