@@ -7,6 +7,7 @@ export default class TmdbApiService {
     this._base_posters_url = 'https://image.tmdb.org/t/p/w185'
     this._curNumOfMovies = 0
   }
+
   getCurNumOfMovies() {
     return this._curNumOfMovies
   }
@@ -59,12 +60,5 @@ export default class TmdbApiService {
     return movies
   }
 
-  // async getGenreById(id) {
-  //   const response = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${this._api_key}`)
-  //   const genres = await response.json()
-  //   const index = genres.findIndex((value) => {
-  //     return value.id === Number(id)
-  //   })
-  //   return genres[index].name
-  // }
+  // async
 }

@@ -8,6 +8,18 @@
   background-color: transparent;
   right: 7px;
   top: 8px;
+  &--rate--0-3{
+    border: 2px solid #e90000;
+  }
+  &--rate--3-5{
+    border: 2px solid #E97E00;
+  }
+  &--rate--5-7{
+    border: 2px solid #E9D100;
+  }
+  &--rate--7-and-more{
+    border: 2px solid #66E900;
+  }
   &__rating {
     position: absolute;
     left: 50%;

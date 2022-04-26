@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
-// import _ from 'lodash'
-
-// const { Search } = Input
+import { Tabs } from 'antd'
 
 import Header from '../Header'
 import SearchPanel from '../SearchPanel'
 
+const { TabPane } = Tabs
+
 import styles from './App.module.scss'
+import './App.scss'
 
 export default class App extends Component {
   constructor(props) {
@@ -77,6 +78,15 @@ export default class App extends Component {
   }
 
   render() {
-    return <React.Fragment>{this.generateApp(this.state.windowSize)}</React.Fragment>
+    return (
+      <Tabs defaultActiveKey="1" size={'small'} centered>
+        <TabPane className={styles['tab-pane']} tab="Search" key="1">
+          {this.generateApp(this.state.windowSize)}
+        </TabPane>
+        <TabPane tab="Rated" key="2">
+          Content of Tab Pane 2
+        </TabPane>
+      </Tabs>
+    )
   }
 }
