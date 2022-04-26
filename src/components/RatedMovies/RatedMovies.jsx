@@ -1,16 +1,14 @@
 import React, { Component, Fragment } from 'react'
-import _ from 'lodash'
 
 import { TmdbServiceConsumer } from '../TmdbServiceContext'
-import SearchInput from '../SearchInput'
 import MoviesList from '../MoviesList'
 import Paginator from '../Paginator'
 
-export default class SearchPanel extends Component {
+export default class RatedMovies extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      queryStr: 'return',
+      // queryStr: 'return',
       totalMovies: 0,
       curPage: 1,
     }
@@ -18,9 +16,9 @@ export default class SearchPanel extends Component {
       this.setState({ curPage })
     }
 
-    this.onSearchInputChange = (evt) => {
-      this.setState({ queryStr: evt.target.value, curPage: 1 })
-    }
+    // this.onSearchInputChange = (evt) => {
+    //   this.setState({ queryStr: evt.target.value, curPage: 1 })
+    // }
 
     this.onMoviesNumberChange = (numOfMovies) => {
       this.setState({ totalMovies: numOfMovies })
@@ -34,18 +32,12 @@ export default class SearchPanel extends Component {
         {({ tmdbService, ratingUpdated }) => {
           return (
             <Fragment>
-              <SearchInput
-                curQuery={this.state.queryStr}
-                onChange={_.debounce(this.onSearchInputChange, 2000)}
-                windowSize={windowSize}
-              />
               <MoviesList
                 windowSize={windowSize}
-                curQuery={this.state.queryStr}
                 onMoviesNumberChange={this.onMoviesNumberChange}
                 curPage={this.state.curPage}
                 tmdbApiService={tmdbService}
-                getMovies={tmdbService.getMoviesByName.bind(tmdbService)}
+                getMovies={tmdbService.getRatedMovies.bind(tmdbService)}
                 shouldUpdate={ratingUpdated}
               />
               <Paginator

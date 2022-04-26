@@ -8,7 +8,6 @@ import StarsRatingPanel from '../StarsRatingPanel'
 import Genres from '../Genres'
 import NoMoviesComponent from '../NoMoviesComponent'
 const { Title, Text } = Typography
-import TmdbApiService from '../../services/TmdbApiService'
 import AppController from '../../services/AppController'
 
 import styles from './MoviesList.module.scss'
@@ -22,8 +21,8 @@ export default class MoviesList extends Component {
       alert: null,
       loading: true,
     }
-    this.tmdbApiService = new TmdbApiService()
-    const _base_posters_url = this.tmdbApiService.getBasePostersUrl()
+
+    const _base_posters_url = this.props.tmdbApiService.getBasePostersUrl()
     // this.generateGenres = (genresArr) => {
     //   return genresArr.map((genre) => {
     //     return <GenreItem key={genre.id} genre={genre.name} />
@@ -34,10 +33,10 @@ export default class MoviesList extends Component {
 
     this.updateComponent = (pageNumber, curQuery) => {
       this.setState({ loading: true })
-      this.tmdbApiService
-        .getMoviesByNameWithGenres(pageNumber, curQuery)
+      this.props
+        .getMovies(pageNumber, curQuery)
         .then((movies) => {
-          this.props.onMoviesNumberChange(this.tmdbApiService.getCurNumOfMovies())
+          this.props.onMoviesNumberChange(this.props.tmdbApiService.getCurNumOfMovies())
           this.setState({ movies: movies.slice(0, moviesNumOnPage), alert: null, loading: false })
         })
         .catch((error) => {
@@ -88,14 +87,14 @@ export default class MoviesList extends Component {
                   {releaseDate}
                 </Text>
               )}
-              <Genres genres={movie.genres} />
+              <Genres genres={movie.genre_ids} />
               <Text className={f('movie-description')}>
                 {movie.overview ? movie.overview.split(' ').slice(0, 8).join(' ') + '...' : ''}
               </Text>
             </div>
           </div>
           <NumberRatingCircle rating={movie.vote_average} />
-          <StarsRatingPanel rating={movie.vote_average} />
+          <StarsRatingPanel updateMovieRating={this.updateMovieRating} rating={movie.rating} movieId={movie.id} />
         </div>
       )
     }
@@ -134,7 +133,7 @@ export default class MoviesList extends Component {
           <Text className={f('movie-description movie-description--tablet')}>
             {movie.overview ? movie.overview.split(' ').slice(0, 10).join(' ') + '...' : ''}
           </Text>
-          <StarsRatingPanel rating={movie.vote_average} />
+          <StarsRatingPanel updateMovieRating={this.updateMovieRating} rating={movie.rating} movieId={movie.id} />
         </div>
       )
     }
@@ -174,7 +173,7 @@ export default class MoviesList extends Component {
           <Text className={f('movie-description movie-description--tablet')}>
             {movie.overview ? movie.overview.split(' ').slice(0, 15).join(' ') + '...' : ''}
           </Text>
-          <StarsRatingPanel rating={movie.vote_average} />
+          <StarsRatingPanel updateMovieRating={this.updateMovieRating} rating={movie.rating} movieId={movie.id} />
         </div>
       )
     }
@@ -201,6 +200,17 @@ export default class MoviesList extends Component {
         }
       })
     }
+
+    this.updateMovieRating = (movieId, rating) => {
+      this.setState((state) => {
+        let newArr = state.movies.map((movie) => {
+          return { ...movie }
+        })
+        let index = newArr.findIndex((value) => value.id === movieId)
+        newArr[index].rating = rating
+        return { movies: newArr }
+      })
+    }
   }
 
   componentDidMount() {
@@ -211,6 +221,11 @@ export default class MoviesList extends Component {
       this.updateComponent(1, this.props.curQuery)
     }
     if (prevProps.curPage !== this.props.curPage) {
+      this.updateComponent(this.props.curPage, this.props.curQuery)
+    }
+    if (prevProps.shouldUpdate !== this.props.shouldUpdate) {
+      // eslint-disable-next-line no-debugger
+      debugger
       this.updateComponent(this.props.curPage, this.props.curQuery)
     }
   }
