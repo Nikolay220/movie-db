@@ -3,16 +3,11 @@ import { Rate } from 'antd'
 
 import AppController from '../../services/AppController'
 import { TmdbServiceConsumer } from '../TmdbServiceContext'
-// import SendMovieRateError from '../../Errors/SendMovieRateError'
 
 import styles from './StarsRatingPanel.module.scss'
 import './StarsRatingPanel.scss'
 
 export default class StarsRatingPanel extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { rating: this.props.rating }
-  }
   render() {
     const { movieId, updateMovieRating } = this.props
     const appController = new AppController(styles)
@@ -31,7 +26,6 @@ export default class StarsRatingPanel extends Component {
                 onChange={(value) => {
                   tmdbService.sendMovieRate(movieId, value).then(() => {
                     updateMovieRating(movieId, value)
-                    // onRatingUpdate()
                   })
                 }}
               />

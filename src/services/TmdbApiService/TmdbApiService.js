@@ -69,7 +69,6 @@ export default class TmdbApiService {
     return movies
   }
 
-  // function returns guest_session_id
   async createGuestSession() {
     try {
       const response = await fetch(`${this._base_url}/authentication/guest_session/new?api_key=${this._api_key}`)
@@ -82,8 +81,6 @@ export default class TmdbApiService {
   }
 
   async getRatedMovies() {
-    // eslint-disable-next-line no-debugger
-    debugger
     try {
       const response = await fetch(
         `${this._base_url}/guest_session/${this.guestSessionId}/rated/movies?api_key=${this._api_key}`
@@ -109,8 +106,6 @@ export default class TmdbApiService {
           body: JSON.stringify(data),
         }
       )
-      // eslint-disable-next-line no-debugger
-      debugger
       const content = await response.json()
       return content.status_code
     } catch (error) {

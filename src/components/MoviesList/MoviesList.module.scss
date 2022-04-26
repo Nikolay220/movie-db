@@ -39,8 +39,6 @@
   width: 70%;
   min-width: 200px;
   height: auto;
-  /* max-height: 72px;
-    overflow-y: scroll; */
   &--tablet {
     margin-top: 4px;
     min-width: 217px;
@@ -55,9 +53,7 @@
 
 .poster-container {
   flex-basis: 183px;
-  /* width: 100%; */
   background-size: 100% auto !important;
-  /* min-width: 132px; */
   padding-bottom: 61%;
   &--tablet {
     flex-basis: 99px;
@@ -78,8 +74,6 @@
 
 .movie-description {
   display: inline-block;
-  /* max-height: 63px;
-    overflow-y: scroll; */
   &--tablet {
     margin: 10px 10px 0;
   }

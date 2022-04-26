@@ -23,11 +23,6 @@ export default class MoviesList extends Component {
     }
 
     const _base_posters_url = this.props.tmdbApiService.getBasePostersUrl()
-    // this.generateGenres = (genresArr) => {
-    //   return genresArr.map((genre) => {
-    //     return <GenreItem key={genre.id} genre={genre.name} />
-    //   })
-    // }
     const appController = new AppController(styles)
     const f = appController.classesToCssModulesFormat.bind(appController)
 
@@ -224,8 +219,6 @@ export default class MoviesList extends Component {
       this.updateComponent(this.props.curPage, this.props.curQuery)
     }
     if (prevProps.shouldUpdate !== this.props.shouldUpdate) {
-      // eslint-disable-next-line no-debugger
-      debugger
       this.updateComponent(this.props.curPage, this.props.curQuery)
     }
   }
