@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Tabs } from 'antd'
+import { Tabs, Alert } from 'antd'
 
 import CustomSpinner from '../CustomSpinner'
 import SearchPanel from '../SearchPanel'
@@ -22,6 +22,7 @@ export default class App extends Component {
         windowSize: 'mobile',
         loading: true,
         ratingUpdated: 0,
+        alert: null,
       }
     else if (window.matchMedia('(max-width: 944px)').matches) {
       this.state = {
@@ -123,13 +124,38 @@ export default class App extends Component {
   componentDidMount() {
     let p1 = this.tmdbApiService.createGuestSession()
     let p2 = this.tmdbApiService.getAllGenres()
-    Promise.all([p1, p2]).then((values) => {
-      this.genres = values[1]
-      this.setState({ loading: false })
-    })
+    Promise.all([p1, p2]).then(
+      (values) => {
+        this.genres = values[1]
+        this.setState({ loading: false })
+      },
+      (reason) => {
+        this.setState({
+          alert: (
+            <Alert
+              message="Error"
+              description={
+                'Recommendations: ' +
+                reason.checksRecommendations +
+                '. Mess:' +
+                reason.message +
+                '.  Error name: ' +
+                reason.name +
+                '.  Error stack: ' +
+                reason.stack
+              }
+              type="error"
+              showIcon
+            />
+          ),
+          loading: false,
+        })
+      }
+    )
   }
   render() {
     if (this.state.loading) return <CustomSpinner />
+    if (this.state.alert) return <React.Fragment>{this.state.alert}</React.Fragment>
     let genresIdsAndNames = this.genres
     let tmdbService = this.tmdbApiService
     let onRatingUpdate = this.onRatingUpdate
