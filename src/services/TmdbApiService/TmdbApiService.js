@@ -1,6 +1,6 @@
 export default class TmdbApiService {
   constructor() {
-    this._api_key = '3eb71cd42f58980962014e01b5dfda44'
+    this._api_key = process.env.REACT_APP_API_KEY
     this._base_posters_url = 'https://image.tmdb.org/t/p/w185'
     this._curNumOfMovies = 0
     this._base_url = 'https://api.themoviedb.org/3'
