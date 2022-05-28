@@ -34,11 +34,13 @@ export default class RatedMovies extends Component {
                 getMovies={tmdbService.getRatedMovies.bind(tmdbService)}
                 shouldUpdate={ratingUpdated}
               />
-              <Paginator
-                totalMovies={this.state.totalMovies}
-                curPage={this.state.curPage}
-                onCurPageChange={this.onCurPageChange}
-              />
+              {Boolean(this.state.totalMovies) && (
+                <Paginator
+                  totalMovies={this.state.totalMovies}
+                  curPage={this.state.curPage}
+                  onCurPageChange={this.onCurPageChange}
+                />
+              )}
             </Fragment>
           )
         }}

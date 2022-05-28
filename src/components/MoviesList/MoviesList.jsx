@@ -9,6 +9,8 @@ import Genres from '../Genres'
 import NoMoviesComponent from '../NoMoviesComponent'
 const { Title, Text } = Typography
 import AppController from '../../services/AppController'
+import GetMoviesByNameError from '../../Errors/GetMoviesByNameError'
+import GetMoviesError from '../../Errors/GetMoviesError'
 
 import styles from './MoviesList.module.scss'
 
@@ -31,10 +33,63 @@ export default class MoviesList extends Component {
       this.props
         .getMovies(pageNumber, curQuery)
         .then((movies) => {
-          this.props.onMoviesNumberChange(this.props.tmdbApiService.getCurNumOfMovies())
-          this.setState({ movies: movies.slice(0, moviesNumOnPage), alert: null, loading: false })
+          // eslint-disable-next-line no-debugger
+          debugger
+          if (movies.errors) {
+            this.props.onMoviesNumberChange(0)
+            this.setState({ movies: [], alert: null, loading: false })
+          } else if (movies.results.length >= 0) {
+            this.props.onMoviesNumberChange(this.props.tmdbApiService.getCurNumOfMovies())
+            this.setState({ movies: movies.results.slice(0, moviesNumOnPage), alert: null, loading: false })
+          } else if (movies.status_message) {
+            let err = new GetMoviesError(movies.status_message)
+            this.setState({
+              alert: (
+                <Alert
+                  message="Error"
+                  description={
+                    'Recommendations: ' +
+                    err.checksRecommendations +
+                    '. Mess:' +
+                    err.message +
+                    '.  Error name: ' +
+                    err.name +
+                    '.  Error stack: ' +
+                    err.stack
+                  }
+                  type="error"
+                  showIcon
+                />
+              ),
+              loading: false,
+            })
+          }
+          // else if (movies.errors) {
+          //   let err = new GetMoviesError(movies.errors[0])
+          //   this.setState({
+          //     alert: (
+          //       <Alert
+          //         message="Error"
+          //         description={
+          //           'Recommendations: ' +
+          //           err.checksRecommendations +
+          //           '. Mess:' +
+          //           err.message +
+          //           '.  Error name: ' +
+          //           err.name +
+          //           '.  Error stack: ' +
+          //           err.stack
+          //         }
+          //         type="error"
+          //         showIcon
+          //       />
+          //     ),
+          //     loading: false,
+          //   })
+          // }
         })
         .catch((error) => {
+          error = new GetMoviesByNameError(error.message)
           this.setState({
             alert: (
               <Alert

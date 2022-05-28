@@ -48,11 +48,13 @@ export default class SearchPanel extends Component {
                 getMovies={tmdbService.getMoviesByName.bind(tmdbService)}
                 shouldUpdate={ratingUpdated}
               />
-              <Paginator
-                totalMovies={this.state.totalMovies}
-                curPage={this.state.curPage}
-                onCurPageChange={this.onCurPageChange}
-              />
+              {Boolean(this.state.totalMovies) && (
+                <Paginator
+                  totalMovies={this.state.totalMovies}
+                  curPage={this.state.curPage}
+                  onCurPageChange={this.onCurPageChange}
+                />
+              )}
             </Fragment>
           )
         }}

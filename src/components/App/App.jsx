@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { Tabs, Alert } from 'antd'
 
+import GetAllGenresError from '../../Errors/GetAllGenresError'
+import CreateGuestSessionError from '../../Errors/CreateGuestSessionError'
+import NetworkError from '../../Errors/NetworkError'
 import CustomSpinner from '../CustomSpinner'
 import SearchPanel from '../SearchPanel'
 const { TabPane } = Tabs
@@ -126,10 +129,60 @@ export default class App extends Component {
     let p2 = this.tmdbApiService.getAllGenres()
     Promise.all([p1, p2]).then(
       (values) => {
-        this.genres = values[1]
-        this.setState({ loading: false })
+        if (!values[0].success) {
+          let error = new CreateGuestSessionError(values[0].status_message)
+          this.setState({
+            alert: (
+              <Alert
+                message="Error"
+                description={
+                  'Recommendations: ' +
+                  error.checksRecommendations +
+                  '. Mess:' +
+                  error.message +
+                  '.  Error name: ' +
+                  error.name +
+                  '.  Error stack: ' +
+                  error.stack
+                }
+                type="error"
+                showIcon
+              />
+            ),
+            loading: false,
+          })
+        }
+        if (values[1].genres) {
+          this.genres = values[1].genres
+          this.setState({ loading: false })
+        } else {
+          let error = new GetAllGenresError(values[1].status_message)
+          this.setState({
+            alert: (
+              <Alert
+                message="Error"
+                description={
+                  'Recommendations: ' +
+                  error.checksRecommendations +
+                  '. Mess:' +
+                  error.message +
+                  '.  Error name: ' +
+                  error.name +
+                  '.  Error stack: ' +
+                  error.stack
+                }
+                type="error"
+                showIcon
+              />
+            ),
+            loading: false,
+          })
+        }
       },
       (reason) => {
+        // eslint-disable-next-line no-debugger
+        debugger
+        reason = new NetworkError(reason.message)
         this.setState({
           alert: (
             <Alert
