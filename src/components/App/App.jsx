@@ -313,11 +313,10 @@ export default class App extends Component {
     if (this.state.alert) return <React.Fragment>{this.state.alert}</React.Fragment>
     let genresIdsAndNames = this.genres
     let tmdbService = this.tmdbApiService
-    let onRatingUpdate = this.onRatingUpdate
     let ratingUpdated = this.state.ratingUpdated
     return (
       <TmdbServiceProvider value={{ genresIdsAndNames, tmdbService, ratingUpdated }}>
-        <Tabs onChange={() => onRatingUpdate()} defaultActiveKey="1" size={'small'} centered>
+        <Tabs onChange={() => this.onRatingUpdate()} defaultActiveKey="1" size={'small'} centered>
           <TabPane className={styles['tab-pane']} tab="Search" key="1">
             {this.generateSearchPanel(this.state.windowSize)}
           </TabPane>

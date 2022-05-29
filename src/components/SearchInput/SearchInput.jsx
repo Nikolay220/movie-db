@@ -18,7 +18,8 @@ export default class SearchInput extends Component {
   render() {
     const appController = new AppController(styles)
     const f = appController.classesToCssModulesFormat.bind(appController)
-    if (this.props.windowSize === 'desktop' || this.props.windowSize === 'tablet')
+    const { windowSize, onChange } = this.props
+    if (windowSize === 'desktop' || windowSize === 'tablet')
       return (
         <div className={f('search-panel')}>
           <Input
@@ -26,7 +27,7 @@ export default class SearchInput extends Component {
             className={f('search-panel__input')}
             onChange={(evt) => {
               this.onChange(evt)
-              this.props.onChange(evt)
+              onChange(evt)
             }}
             placeholder="Type to search ..."
           />
@@ -40,7 +41,7 @@ export default class SearchInput extends Component {
             className={f('search-panel__input search-panel__input--mobile')}
             onChange={(evt) => {
               this.onChange(evt)
-              this.props.onChange(evt)
+              onChange(evt)
             }}
             placeholder="Type to search ..."
           />

@@ -15,7 +15,7 @@ export default class StarsRatingPanel extends Component {
     }
   }
   render() {
-    const { movieId, updateMovieRating } = this.props
+    const { movieId, updateMovieRating, rating } = this.props
     const appController = new AppController(styles)
     const f = appController.classesToCssModulesFormat.bind(appController)
     return (
@@ -39,7 +39,7 @@ export default class StarsRatingPanel extends Component {
                 allowClear={false}
                 allowHalf
                 count={10}
-                value={this.props.rating}
+                value={rating}
                 onChange={(value) => {
                   tmdbService.sendMovieRate(movieId, value).then(
                     () => {

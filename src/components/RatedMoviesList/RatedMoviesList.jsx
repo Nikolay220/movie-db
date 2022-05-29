@@ -23,23 +23,22 @@ export default class RatedMoviesList extends Component {
       alert: null,
       loading: true,
     }
-
-    const _base_posters_url = this.props.tmdbApiService.getBasePostersUrl()
+    const { tmdbApiService, getMovies, onMoviesNumberChange } = this.props
+    const _base_posters_url = tmdbApiService.getBasePostersUrl()
     const appController = new AppController(styles)
     const f = appController.classesToCssModulesFormat.bind(appController)
 
     this.updateComponent = (pageNumber, curQuery) => {
       this.setState({ loading: true })
-      this.props
-        .getMovies(pageNumber, curQuery)
+      getMovies(pageNumber, curQuery)
         .then((movies) => {
           // eslint-disable-next-line no-debugger
           debugger
           if (movies.errors) {
-            this.props.onMoviesNumberChange(0)
+            onMoviesNumberChange(0)
             this.setState({ movies: [], alert: null, loading: false })
           } else if (movies.results.length >= 0) {
-            this.props.onMoviesNumberChange(this.props.tmdbApiService.getCurNumOfMovies())
+            onMoviesNumberChange(tmdbApiService.getCurNumOfMovies())
             this.setState({ movies: movies.results.slice(0, moviesNumOnPage), alert: null, loading: false })
           } else if (movies.status_message) {
             let err = new GetMoviesError(movies.status_message)
@@ -259,17 +258,17 @@ export default class RatedMoviesList extends Component {
     if (this.state.alert) return <React.Fragment>{this.state.alert}</React.Fragment>
     if (this.state.loading) return <CustomSpinner />
     if (this.state.movies.length === 0) return <NoMoviesComponent />
-
-    const movies = this.generateRows(this.props.windowSize)
+    const { windowSize } = this.props
+    const movies = this.generateRows(windowSize)
     let rowGutters = [0, 0]
     let moviesListClasses = ''
-    if (this.props.windowSize === 'desktop') {
+    if (windowSize === 'desktop') {
       rowGutters = [36, 36]
       moviesListClasses = 'movies-list'
-    } else if (this.props.windowSize === 'tablet') {
+    } else if (windowSize === 'tablet') {
       rowGutters = [20, 20]
       moviesListClasses = 'movies-list movies-list--tablet'
-    } else if (this.props.windowSize === 'mobile') {
+    } else if (windowSize === 'mobile') {
       rowGutters = [0, 20]
       moviesListClasses = 'movies-list movies-list--mobile'
     }
