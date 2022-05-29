@@ -32,8 +32,6 @@ export default class RatedMoviesList extends Component {
       this.setState({ loading: true })
       getMovies(pageNumber, curQuery)
         .then((movies) => {
-          // eslint-disable-next-line no-debugger
-          debugger
           if (movies.errors) {
             onMoviesNumberChange(0)
             this.setState({ movies: [], alert: null, loading: false })

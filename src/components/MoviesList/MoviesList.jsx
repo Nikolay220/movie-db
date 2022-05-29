@@ -33,8 +33,6 @@ export default class MoviesList extends Component {
       this.setState({ loading: true })
       getMovies(pageNumber, curQuery)
         .then((movies) => {
-          // eslint-disable-next-line no-debugger
-          debugger
           if (movies.errors) {
             onMoviesNumberChange(0)
             this.setState({ movies: [], alert: null, loading: false })
@@ -64,29 +62,6 @@ export default class MoviesList extends Component {
               loading: false,
             })
           }
-          // else if (movies.errors) {
-          //   let err = new GetMoviesError(movies.errors[0])
-          //   this.setState({
-          //     alert: (
-          //       <Alert
-          //         message="Error"
-          //         description={
-          //           'Recommendations: ' +
-          //           err.checksRecommendations +
-          //           '. Mess:' +
-          //           err.message +
-          //           '.  Error name: ' +
-          //           err.name +
-          //           '.  Error stack: ' +
-          //           err.stack
-          //         }
-          //         type="error"
-          //         showIcon
-          //       />
-          //     ),
-          //     loading: false,
-          //   })
-          // }
         })
         .catch((error) => {
           error = new GetMoviesByNameError(error.message)
