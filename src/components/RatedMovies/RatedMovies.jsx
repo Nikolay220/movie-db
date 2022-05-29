@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 
 import { TmdbServiceConsumer } from '../TmdbServiceContext'
-import MoviesList from '../MoviesList'
+import RatedMoviesList from '../RatedMoviesList'
 import Paginator from '../Paginator'
 
 export default class RatedMovies extends Component {
@@ -26,7 +26,7 @@ export default class RatedMovies extends Component {
         {({ tmdbService, ratingUpdated }) => {
           return (
             <Fragment>
-              <MoviesList
+              <RatedMoviesList
                 windowSize={windowSize}
                 onMoviesNumberChange={this.onMoviesNumberChange}
                 curPage={this.state.curPage}

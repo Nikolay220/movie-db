@@ -10,6 +10,7 @@ const { TabPane } = Tabs
 import TmdbApiService from '../../services/TmdbApiService'
 import { TmdbServiceProvider } from '../TmdbServiceContext'
 import RatedMovies from '../RatedMovies'
+import SessionStorageService from '../../services/SessionStorageService'
 
 import styles from './App.module.scss'
 
@@ -19,7 +20,6 @@ export default class App extends Component {
   constructor(props) {
     super(props)
     this.genres = null
-    this.guestSessionId = null
     if (window.matchMedia('(max-width: 944px)').matches && window.matchMedia('(max-width: 830px)').matches)
       this.state = {
         windowSize: 'mobile',
@@ -125,25 +125,48 @@ export default class App extends Component {
     }
   }
   componentDidMount() {
-    let p1 = this.tmdbApiService.createGuestSession()
-    let p2 = this.tmdbApiService.getAllGenres()
-    Promise.all([p1, p2]).then(
-      (values) => {
-        if (!values[0].success) {
-          let error = new CreateGuestSessionError(values[0].status_message)
+    if (!SessionStorageService.getGuestSessionId())
+      this.tmdbApiService.createGuestSession().then(
+        (value) => {
+          if (!value.success) {
+            let error = new CreateGuestSessionError(value.status_message)
+            this.setState({
+              alert: (
+                <Alert
+                  message="Error"
+                  description={
+                    'Recommendations: ' +
+                    error.checksRecommendations +
+                    '. Mess:' +
+                    error.message +
+                    '.  Error name: ' +
+                    error.name +
+                    '.  Error stack: ' +
+                    error.stack
+                  }
+                  type="error"
+                  showIcon
+                />
+              ),
+              loading: false,
+            })
+          }
+        },
+        (reason) => {
+          reason = new NetworkError(reason.message)
           this.setState({
             alert: (
               <Alert
                 message="Error"
                 description={
                   'Recommendations: ' +
-                  error.checksRecommendations +
+                  reason.checksRecommendations +
                   '. Mess:' +
-                  error.message +
+                  reason.message +
                   '.  Error name: ' +
-                  error.name +
+                  reason.name +
                   '.  Error stack: ' +
-                  error.stack
+                  reason.stack
                 }
                 type="error"
                 showIcon
@@ -152,11 +175,14 @@ export default class App extends Component {
             loading: false,
           })
         }
-        if (values[1].genres) {
-          this.genres = values[1].genres
+      )
+    this.tmdbApiService.getAllGenres().then(
+      (value) => {
+        if (value.genres) {
+          this.genres = value.genres
           this.setState({ loading: false })
         } else {
-          let error = new GetAllGenresError(values[1].status_message)
+          let error = new GetAllGenresError(value.status_message)
           this.setState({
             alert: (
               <Alert
@@ -180,8 +206,6 @@ export default class App extends Component {
         }
       },
       (reason) => {
-        // eslint-disable-next-line no-debugger
-        debugger
         reason = new NetworkError(reason.message)
         this.setState({
           alert: (
@@ -205,6 +229,84 @@ export default class App extends Component {
         })
       }
     )
+    // Promise.all([guestSessionPromise, getAllGenresPromise]).then(
+    //   (values) => {
+    //     if (!values[0].success) {
+    //       let error = new CreateGuestSessionError(values[0].status_message)
+    //       this.setState({
+    //         alert: (
+    //           <Alert
+    //             message="Error"
+    //             description={
+    //               'Recommendations: ' +
+    //               error.checksRecommendations +
+    //               '. Mess:' +
+    //               error.message +
+    //               '.  Error name: ' +
+    //               error.name +
+    //               '.  Error stack: ' +
+    //               error.stack
+    //             }
+    //             type="error"
+    //             showIcon
+    //           />
+    //         ),
+    //         loading: false,
+    //       })
+    //     }
+    //     if (values[1].genres) {
+    //       this.genres = values[1].genres
+    //       this.setState({ loading: false })
+    //     } else {
+    //       let error = new GetAllGenresError(values[1].status_message)
+    //       this.setState({
+    //         alert: (
+    //           <Alert
+    //             message="Error"
+    //             description={
+    //               'Recommendations: ' +
+    //               error.checksRecommendations +
+    //               '. Mess:' +
+    //               error.message +
+    //               '.  Error name: ' +
+    //               error.name +
+    //               '.  Error stack: ' +
+    //               error.stack
+    //             }
+    //             type="error"
+    //             showIcon
+    //           />
+    //         ),
+    //         loading: false,
+    //       })
+    //     }
+    //   },
+    //   (reason) => {
+    //     // eslint-disable-next-line no-debugger
+    //     debugger
+    //     reason = new NetworkError(reason.message)
+    //     this.setState({
+    //       alert: (
+    //         <Alert
+    //           message="Error"
+    //           description={
+    //             'Recommendations: ' +
+    //             reason.checksRecommendations +
+    //             '. Mess:' +
+    //             reason.message +
+    //             '.  Error name: ' +
+    //             reason.name +
+    //             '.  Error stack: ' +
+    //             reason.stack
+    //           }
+    //           type="error"
+    //           showIcon
+    //         />
+    //       ),
+    //       loading: false,
+    //     })
+    //   }
+    // )
   }
   render() {
     if (this.state.loading) return <CustomSpinner />

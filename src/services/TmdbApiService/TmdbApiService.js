@@ -1,10 +1,11 @@
+import SessionStorageService from '../SessionStorageService'
+
 export default class TmdbApiService {
   constructor() {
     this._api_key = process.env.REACT_APP_API_KEY
     this._base_posters_url = 'https://image.tmdb.org/t/p/w185'
     this._curNumOfMovies = 0
     this._base_url = 'https://api.themoviedb.org/3'
-    this.guestSessionId = null
   }
 
   getCurNumOfMovies() {
@@ -23,12 +24,14 @@ export default class TmdbApiService {
     else return movies
     let ratedMovies = await this.getRatedMovies()
     this._curNumOfMovies = movies.total_results
-    if (ratedMovies['total_results'] >= 0) ratedMovies = ratedMovies.results
-    if (ratedMovies.length)
-      newArr.forEach((movie) => {
-        let index = ratedMovies.findIndex((ratedMovie) => ratedMovie.id === movie.id)
-        movie.rating = index != -1 ? ratedMovies[index].rating : 0
-      })
+    if (!ratedMovies.errors) {
+      if (ratedMovies['total_results'] >= 0) ratedMovies = ratedMovies.results
+      if (ratedMovies.length)
+        newArr.forEach((movie) => {
+          let index = ratedMovies.findIndex((ratedMovie) => ratedMovie.id === movie.id)
+          movie.rating = index != -1 ? ratedMovies[index].rating : 0
+        })
+    }
     return { ...movies, ...{ results: newArr } }
   }
   async getMoviesByName(pageNumber, name) {
@@ -48,32 +51,42 @@ export default class TmdbApiService {
   async createGuestSession() {
     const response = await fetch(`${this._base_url}/authentication/guest_session/new?api_key=${this._api_key}`)
     const guest_session = await response.json()
-    this.guestSessionId = guest_session.guest_session_id ? guest_session.guest_session_id : null
+    if (guest_session.guest_session_id) SessionStorageService.setGuestSessionId(guest_session.guest_session_id)
     return guest_session
   }
 
   async getRatedMovies() {
-    const response = await fetch(
-      `${this._base_url}/guest_session/${this.guestSessionId}/rated/movies?api_key=${this._api_key}`
-    )
-    const movies = await response.json()
-    this._curNumOfMovies = movies.total_results ? movies.total_results : 0
+    let guestSessionId = SessionStorageService.getGuestSessionId()
+    let movies = {}
+    if (guestSessionId) {
+      const response = await fetch(
+        `${this._base_url}/guest_session/${guestSessionId}/rated/movies?api_key=${this._api_key}`
+      )
+      movies = await response.json()
+      this._curNumOfMovies = movies.total_results ? movies.total_results : 0
+      return movies
+    }
+    movies.errors = 'Guest session id is absent'
     return movies
   }
 
   async sendMovieRate(movieId, rate) {
+    let guestSessionId = SessionStorageService.getGuestSessionId()
     const data = { value: rate }
-    const response = await fetch(
-      `${this._base_url}/movie/${movieId}/rating?api_key=${this._api_key}&guest_session_id=${this.guestSessionId}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8',
-        },
-        body: JSON.stringify(data),
-      }
-    )
-    const content = await response.json()
-    return content
+    let response
+    if (guestSessionId) {
+      response = await fetch(
+        `${this._base_url}/movie/${movieId}/rating?api_key=${this._api_key}&guest_session_id=${guestSessionId}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+          },
+          body: JSON.stringify(data),
+        }
+      )
+      return await response.json()
+    }
+    return null
   }
 }
